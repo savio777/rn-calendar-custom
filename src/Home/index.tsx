@@ -1,10 +1,17 @@
 import {useCallback, useState} from 'react';
-import {DateData} from 'react-native-calendars';
+import {DateData, LocaleConfig} from 'react-native-calendars';
 import {MarkedDates} from 'react-native-calendars/src/types';
 
-import CalendarCustom from '../components/Calendar';
+import CalendarCustom from '../components/CalendarCustom';
+import {languageCalendar} from '../components/CalendarCustom/locales';
 
-import {Container} from './styles';
+import {Container, Title} from './styles';
+
+LocaleConfig.locales['pt'] = languageCalendar.pt;
+LocaleConfig.locales['en'] = languageCalendar.en;
+LocaleConfig.locales['esp'] = languageCalendar.esp;
+
+LocaleConfig.defaultLocale = 'pt';
 
 export default function Home() {
   const [day, setDay] = useState<DateData>();
@@ -26,23 +33,31 @@ export default function Home() {
     });
   }, []);
 
+  console.log(JSON.stringify(days));
+
   return (
     <Container>
       <CalendarCustom />
 
+      <Title>{new Date().toDateString()}</Title>
+
       <CalendarCustom
-        minDate={new Date().toString()}
+        minDate={new Date().toDateString()}
         onDayPress={value =>
           setDay(value.dateString === day?.dateString ? undefined : value)
         }
         markedDates={day && {[day.dateString]: {selected: true}}}
       />
 
+      <Title>{day?.dateString}</Title>
+
       <CalendarCustom
-        minDate={new Date().toString()}
+        minDate={new Date().toDateString()}
         onDayPress={handleChangeDays}
         markedDates={days}
       />
+
+      <Title>{Object.keys(days || {}).map(item => item + ', ')}</Title>
     </Container>
   );
 }

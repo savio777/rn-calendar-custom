@@ -15,6 +15,12 @@ export const Calendar = styled(RNCalendar).attrs({
     todayTextColor: '#F06543',
     selectedDayBackgroundColor: '#F06543',
     selectedDayTextColor: '#E8E8E8',
+    arrowColor: '#E8E8E8',
+    calendarBackground: 'transparent',
+    textDayStyle: {
+      color: '#ffff',
+    },
+    textDisabledColor: '#a1a1a1',
   },
 } as CalendarProps)`
   background-color: transparent;
