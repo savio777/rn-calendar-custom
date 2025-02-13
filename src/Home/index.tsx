@@ -18,6 +18,13 @@ export default function Home() {
 
   const [days, setDays] = useState<MarkedDates>();
 
+  const [daysMarked, setDaysMarked] = useState<MarkedDates>({
+    '2025-02-20': {marked: true},
+    '2025-02-22': {marked: true},
+    '2025-02-25': {marked: true},
+    '2025-02-21': {marked: true},
+  });
+
   const handleChangeDays = useCallback((value: DateData) => {
     setDays(oldValue => {
       if (oldValue && oldValue[value.dateString]) {
@@ -33,7 +40,33 @@ export default function Home() {
     });
   }, []);
 
-  console.log(JSON.stringify(days));
+  const handleChangeDaysMarked = useCallback((value: DateData) => {
+    setDaysMarked(oldValue => {
+      if (oldValue && oldValue[value.dateString]?.marked) {
+        return {
+          ...oldValue,
+          [value.dateString]: {
+            selected: !oldValue[value.dateString].selected,
+            marked: true,
+          },
+        };
+      }
+
+      if (oldValue && oldValue[value.dateString]) {
+        return {
+          ...oldValue,
+          [value.dateString]: {
+            selected: !oldValue[value.dateString].selected,
+          },
+        };
+      }
+
+      return {
+        ...oldValue,
+        [value.dateString]: {selected: true},
+      };
+    });
+  }, []);
 
   return (
     <Container>
@@ -46,7 +79,13 @@ export default function Home() {
         onDayPress={value =>
           setDay(value.dateString === day?.dateString ? undefined : value)
         }
-        markedDates={day && {[day.dateString]: {selected: true}}}
+        markedDates={
+          day && {
+            [day.dateString]: {
+              selected: true,
+            },
+          }
+        }
       />
 
       <Title>{day?.dateString}</Title>
@@ -58,6 +97,13 @@ export default function Home() {
       />
 
       <Title>{Object.keys(days || {}).map(item => item + ', ')}</Title>
+
+      <CalendarCustom
+        markedDates={daysMarked}
+        onDayPress={handleChangeDaysMarked}
+      />
+
+      {/* criar calendário que seleciona só um e com vários marked */}
     </Container>
   );
 }
